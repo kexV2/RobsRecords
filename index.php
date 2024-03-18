@@ -38,6 +38,51 @@ $conn->close();
 // You can use $totalArtists variable wherever you need the count
 ?>
 
+<?php
+// Database connection parameters
+$servername = "localhost";
+$username = "root";
+$password = "sqlisgay1";
+$database = "robsrecords";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $database);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// SQL query to count the number of different genres in the "products" table
+$sql = "SELECT COUNT(DISTINCT genre) as total_genres FROM products WHERE genre IS NOT NULL";
+$result = $conn->query($sql);
+
+// Check if there are results
+if ($result->num_rows > 0) {
+    // Fetch associative array of results
+    $row = $result->fetch_assoc();
+
+    // Get the total count of different genres from the result
+    $totalGenres = $row['total_genres'];
+
+    // Now $totalGenres contains the count of different genres in the "products" table (excluding null values)
+    // You can use $totalGenres variable wherever you need the count
+} else {
+    echo "0 results";
+}
+
+// Close connection
+$conn->close();
+
+// Now $hours, $minutes, and $seconds contain the total duration in hours, minutes, and seconds respectively
+// $formattedDuration contains the total duration formatted as HH:MM:SS
+// You can use these variables wherever you need the total duration broken down or formatted
+?>
+
 
 
 <?php
@@ -294,7 +339,7 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
 
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end<?php echo $totalArtists ?> data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end =<?php echo $totalArtists ?> data-purecounter-duration="1" class="purecounter"></span>
               <p>Artists</p>
             </div>
           </div><!-- End Stats Item -->
@@ -313,8 +358,8 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
 
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end=<?php echo $totalProducts ?> data-purecounter-duration="1" class="purecounter"></span>
-              <p>Hours Of Music</p>
+              <span data-purecounter-start="0" data-purecounter-end=<?php echo $totalGenres ?> data-purecounter-duration="1" class="purecounter"></span>
+              <p>Genres</p>
             </div>
           </div><!-- End Stats Item -->
 
