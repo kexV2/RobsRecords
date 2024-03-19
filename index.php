@@ -1,3 +1,74 @@
+
+<?php
+class Product {
+    private $conn;
+
+    public function __construct($servername, $username, $password, $database) {
+        // Create connection
+        $servername = "localhost";
+        $username = "root";
+        $password = "sqlisgay1";
+        $database = "robsrecords";
+        $this->conn = new mysqli($servername, $username, $password, $database);
+
+        // Check connection
+        if ($this->conn->connect_error) {
+            die("Connection failed: " . $this->conn->connect_error);
+        }
+    }
+
+    public function getProductById($productId) {
+        // SQL query to fetch product by ID
+        $sql = "SELECT name, artist, genre, price, imgur FROM products WHERE id = ?";
+
+        // Prepare statement
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("i", $productId);
+
+        // Execute statement
+        $stmt->execute();
+
+        // Get result
+        $result = $stmt->get_result();
+
+        $product = null;
+
+        // Check if there are results
+        if ($result->num_rows > 0) {
+            // Fetch associative array of result
+            $product = $result->fetch_assoc();
+        }
+
+        // Close statement
+        $stmt->close();
+
+        return $product;
+    }
+
+    public function __destruct() {
+        // Close connection
+        $this->conn->close();
+    }
+}
+
+// Usage:
+$servername = "localhost";
+$username = "root";
+$password = "sqlisgay1";
+$database = "robsrecords";
+
+$productObj = new Product($servername, $username, $password, $database);
+
+// Get product with ID 1
+$productId = 1;
+$product = $productObj->getProductById($productId);
+
+// Access product details
+
+?>
+
+
+
 <?php
 // Database connection parameters
 $servername = "localhost";
@@ -181,9 +252,9 @@ $conn->close();
         <ul>
           <li><a href="#hero">Home</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#menu">Menu</a></li>
+          <li><a href="#menu">Products</a></li>
           <li><a href="#events">Events</a></li>
-          <li><a href="#chefs">Chefs</a></li>
+          <li><a href="#chefs">Owners</a></li>
           <li><a href="#gallery">Gallery</a></li>
           <li><a href="login.html">Login</a></li>
           <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
@@ -219,7 +290,7 @@ $conn->close();
     <div class="container">
       <div class="row justify-content-between gy-5">
         <div class="col-lg-5 order-2 order-lg-1 d-flex flex-column justify-content-center align-items-center align-items-lg-start text-center text-lg-start">
-          <h2 data-aos="fade-up">Enjoy Your <?php echo $totalProducts ?> Music<br>The Proper Way</h2>
+          <h2 data-aos="fade-up">Enjoy Your Music<br>The Proper Way</h2>
           <p data-aos="fade-up" data-aos-delay="100">For music loves alike, ROB'S Records serves as a hub for all genres, From Jazz to Rap, To Poetry to Trap</p>
           <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
            
@@ -374,32 +445,32 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
       <div class="container" data-aos="fade-up">
 
         <div class="section-header">
-          <h2>Our Menu</h2>
-          <p>Check Our <span>Yummy Menu</span></p>
+          <h2>Our Products</h2>
+          <p>Check Our <span>Great music selection</span></p>
         </div>
 
         <ul class="nav nav-tabs d-flex justify-content-center" data-aos="fade-up" data-aos-delay="200">
 
           <li class="nav-item">
             <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#menu-starters">
-              <h4>Starters</h4>
+              <h4>All</h4>
             </a>
           </li><!-- End tab nav item -->
 
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-breakfast">
-              <h4>Breakfast</h4>
+              <h4>Hip hop</h4>
             </a><!-- End tab nav item -->
 
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-lunch">
-              <h4>Lunch</h4>
+              <h4>Rap</h4>
             </a>
           </li><!-- End tab nav item -->
 
           <li class="nav-item">
             <a class="nav-link" data-bs-toggle="tab" data-bs-target="#menu-dinner">
-              <h4>Dinner</h4>
+              <h4>Rock</h4>
             </a>
           </li><!-- End tab nav item -->
 
@@ -410,7 +481,7 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
           <div class="tab-pane fade active show" id="menu-starters">
 
             <div class="tab-header text-center">
-              <p>Menu</p>
+              <p>Albums</p>
               <h3>Rap</h3>
             </div>
 
@@ -418,56 +489,80 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
 
               <div class="col-lg-4 menu-item">
                 <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                <h4>Magnam Tiste</h4>
+                <h4><?php  echo $product['name']?></h4>
                 <p class="ingredients">
-                  Lorem, deren, trataro, filede, nerada
+                    <?php  echo "Artists: ",$product['artist']?><br>
+                    <?php  echo "Genre: ",$product['genre']?>
                 </p>
                 <p class="price">
-                  $5.95
+                    <?php  echo "$",$product['price']?>
                 </p>
               </div><!-- Menu Item -->
 
+                <?php // Get product with ID 1
+                $productId = 2;
+                $product = $productObj->getProductById($productId);
+                ?>
               <div class="col-lg-4 menu-item">
                 <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
-                <h4>Aut Luia</h4>
+                <h4><?php  echo $product['name']?>
+                </h4>
                 <p class="ingredients">
-                  Lorem, deren, trataro, filede, nerada
+                    <?php  echo "Artists: ",$product['artist']?><br>
+                    <?php  echo "Genre: ",$product['genre']?>
                 </p>
                 <p class="price">
-                  $14.95
+                    <?php  echo "$",$product['price']?>
                 </p>
               </div><!-- Menu Item -->
+                <?php // Get product with ID
+                $productId = 3;
+                $product = $productObj->getProductById($productId);
+                ?>
 
               <div class="col-lg-4 menu-item">
                 <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                <h4>Est Eligendi</h4>
+                  <h4><?php  echo $product['name']?>
                 <p class="ingredients">
-                  Lorem, deren, trataro, filede, nerada
+                    <?php  echo "Artists: ",$product['artist']?><br>
+                    <?php  echo "Genre: ",$product['genre']?>
                 </p>
                 <p class="price">
-                  $8.95
+                    <?php  echo "$",$product['price']?>
                 </p>
               </div><!-- Menu Item -->
+                <?php // Get product with ID
+                $productId = 4;
+                $product = $productObj->getProductById($productId);
+                ?>
 
               <div class="col-lg-4 menu-item">
                 <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                <h4>Eos Luibusdam</h4>
+                  <h4><?php  echo $product['name']?>
                 <p class="ingredients">
-                  Lorem, deren, trataro, filede, nerada
+                    <?php  echo "Artists: ",$product['artist']?><br>
+                    <?php  echo "Genre: ",$product['genre']?>
                 </p>
                 <p class="price">
-                  $12.95
+                    <?php  echo "$",$product['price']?>
                 </p>
               </div><!-- Menu Item -->
 
-              <div class="col-lg-4 menu-item">
+                <?php // Get product with ID
+                $productId = 5;
+                $product = $productObj->getProductById($productId);
+                ?>
+
+
+                <div class="col-lg-4 menu-item">
                 <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                <h4>Eos Luibusdam</h4>
+                    <h4><?php  echo $product['name']?>
                 <p class="ingredients">
-                  Lorem, deren, trataro, filede, nerada
+                    <?php  echo "Artists: ",$product['artist']?><br>
+                    <?php  echo "Genre: ",$product['genre']?>
                 </p>
                 <p class="price">
-                  $12.95
+                    <?php  echo "$",$product['price']?>
                 </p>
               </div><!-- Menu Item -->
 
