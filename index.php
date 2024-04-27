@@ -1,75 +1,5 @@
 
 <?php
-class Product {
-    private $conn;
-
-    public function __construct($servername, $username, $password, $database) {
-        // Create connection
-        $servername = "localhost";
-        $username = "root";
-        $password = "sqlisgay1";
-        $database = "robsrecords";
-        $this->conn = new mysqli($servername, $username, $password, $database);
-
-        // Check connection
-        if ($this->conn->connect_error) {
-            die("Connection failed: " . $this->conn->connect_error);
-        }
-    }
-
-    public function getProductById($productId) {
-        // SQL query to fetch product by ID
-        $sql = "SELECT name, artist, genre, price, imgur FROM products WHERE id = ?";
-
-        // Prepare statement
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("i", $productId);
-
-        // Execute statement
-        $stmt->execute();
-
-        // Get result
-        $result = $stmt->get_result();
-
-        $product = null;
-
-        // Check if there are results
-        if ($result->num_rows > 0) {
-            // Fetch associative array of result
-            $product = $result->fetch_assoc();
-        }
-
-        // Close statement
-        $stmt->close();
-
-        return $product;
-    }
-
-    public function __destruct() {
-        // Close connection
-        $this->conn->close();
-    }
-}
-
-// Usage:
-$servername = "localhost";
-$username = "root";
-$password = "sqlisgay1";
-$database = "robsrecords";
-
-$productObj = new Product($servername, $username, $password, $database);
-
-// Get product with ID 1
-$productId = 1;
-$product = $productObj->getProductById($productId);
-
-// Access product details
-
-?>
-
-
-
-<?php
 // Database connection parameters
 $servername = "localhost";
 $username = "root";
@@ -253,29 +183,10 @@ $conn->close();
           <li><a href="#hero">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#menu">Products</a></li>
-          <li><a href="#events">Events</a></li>
           <li><a href="#chefs">Owners</a></li>
           <li><a href="#gallery">Gallery</a></li>
           <li><a href="login.html">Login</a></li>
-          <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-            <ul>
-              <li><a href="#">Drop Down 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Drop Down 2</a></li>
-              <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li>
-            </ul>
-          </li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
+
       </nav><!-- .navbar -->
 
       
@@ -403,6 +314,8 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
 
 
     <!-- ======= Stats Counter Section ======= -->
+
+
     <section id="stats-counter" class="stats-counter">
       <div class="container" data-aos="zoom-out">
 
@@ -482,100 +395,58 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
 
             <div class="tab-header text-center">
               <p>Albums</p>
-              <h3>Rap</h3>
+              <h3>All</h3>
             </div>
 
-            <div class="row gy-5">
 
-              <div class="col-lg-4 menu-item">
-                <a href="assets/img/menu/menu-item-1.png" class="glightbox"><img src="assets/img/menu/menu-item-1.png" class="menu-img img-fluid" alt=""></a>
-                <h4><?php  echo $product['name']?></h4>
-                <p class="ingredients">
-                    <?php  echo "Artists: ",$product['artist']?><br>
-                    <?php  echo "Genre: ",$product['genre']?>
-                </p>
-                <p class="price">
-                    <?php  echo "$",$product['price']?>
-                </p>
-              </div><!-- Menu Item -->
+              <?php
 
-                <?php // Get product with ID 1
-                $productId = 2;
-                $product = $productObj->getProductById($productId);
-                ?>
-              <div class="col-lg-4 menu-item">
-                <a href="assets/img/menu/menu-item-2.png" class="glightbox"><img src="assets/img/menu/menu-item-2.png" class="menu-img img-fluid" alt=""></a>
-                <h4><?php  echo $product['name']?>
-                </h4>
-                <p class="ingredients">
-                    <?php  echo "Artists: ",$product['artist']?><br>
-                    <?php  echo "Genre: ",$product['genre']?>
-                </p>
-                <p class="price">
-                    <?php  echo "$",$product['price']?>
-                </p>
-              </div><!-- Menu Item -->
-                <?php // Get product with ID
-                $productId = 3;
-                $product = $productObj->getProductById($productId);
-                ?>
+              // PDO connection
+              $dsn = "mysql:host=localhost;dbname=robsrecords";
+              $username = "root";
+              $password = "sqlisgay1";
 
-              <div class="col-lg-4 menu-item">
-                <a href="assets/img/menu/menu-item-3.png" class="glightbox"><img src="assets/img/menu/menu-item-3.png" class="menu-img img-fluid" alt=""></a>
-                  <h4><?php  echo $product['name']?>
-                <p class="ingredients">
-                    <?php  echo "Artists: ",$product['artist']?><br>
-                    <?php  echo "Genre: ",$product['genre']?>
-                </p>
-                <p class="price">
-                    <?php  echo "$",$product['price']?>
-                </p>
-              </div><!-- Menu Item -->
-                <?php // Get product with ID
-                $productId = 4;
-                $product = $productObj->getProductById($productId);
-                ?>
+              try {
+                  $pdo = new PDO($dsn, $username, $password);
+                  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-              <div class="col-lg-4 menu-item">
-                <a href="assets/img/menu/menu-item-4.png" class="glightbox"><img src="assets/img/menu/menu-item-4.png" class="menu-img img-fluid" alt=""></a>
-                  <h4><?php  echo $product['name']?>
-                <p class="ingredients">
-                    <?php  echo "Artists: ",$product['artist']?><br>
-                    <?php  echo "Genre: ",$product['genre']?>
-                </p>
-                <p class="price">
-                    <?php  echo "$",$product['price']?>
-                </p>
-              </div><!-- Menu Item -->
+                  // SQL query
+                  $query = "SELECT name, artist, price, genre, imgur AS imgur FROM products";
 
-                <?php // Get product with ID
-                $productId = 5;
-                $product = $productObj->getProductById($productId);
-                ?>
+                  // Prepare statement
+                  $statement = $pdo->prepare($query);
+
+                  // Execute statement
+                  $statement->execute();
+
+                  // Fetch data
+                  $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+                  // loop to get all the products from database and place them in the html code and output it
+                  echo '<div class="row gy-5">';
+                  foreach ($products as $product) {
+                      echo '<div class="col-lg-4 menu-item">';
+                      echo '<a href="' . $product['imgur'] . '" class="glightbox"><img src="' . $product['imgur'] . '" class="menu-img img-fluid" alt=""></a>';
+                      echo '<h4>' . $product['name'] . '</h4>';
+                      echo '<p class="ingredients">';
+                      echo 'Artists: ' . $product['artist'] . '<br>';
+                      echo 'Genre: ' . $product['genre'];
+                      echo '</p>';
+                      echo '<p class="price">$' . $product['price'] . '</p>';
+                      echo '</div>';
+                  }
+                  echo '</div>';
+              } catch (PDOException $e) {
+                  //to catch errors
+                  echo "Error: " . $e->getMessage();
+              }
+
+              // Close connection
+              $pdo = null;
+
+              ?>
 
 
-                <div class="col-lg-4 menu-item">
-                <a href="assets/img/menu/menu-item-5.png" class="glightbox"><img src="assets/img/menu/menu-item-5.png" class="menu-img img-fluid" alt=""></a>
-                    <h4><?php  echo $product['name']?>
-                <p class="ingredients">
-                    <?php  echo "Artists: ",$product['artist']?><br>
-                    <?php  echo "Genre: ",$product['genre']?>
-                </p>
-                <p class="price">
-                    <?php  echo "$",$product['price']?>
-                </p>
-              </div><!-- Menu Item -->
-
-              <div class="col-lg-4 menu-item">
-                <a href="assets/img/menu/menu-item-6.png" class="glightbox"><img src="assets/img/menu/menu-item-6.png" class="menu-img img-fluid" alt=""></a>
-                <h4>Laboriosam Direva</h4>
-                <p class="ingredients">
-                  Lorem, deren, trataro, filede, nerada
-                </p>
-                <p class="price">
-                  $9.95
-                </p>
-              </div><!-- Menu Item -->
 
             </div>
           </div><!-- End Starter Menu Content -->
