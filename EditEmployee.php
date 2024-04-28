@@ -1,26 +1,28 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$database = "robsrecords";
+// Include config.php to get database connection details
+require 'config.php';
 
-// Create connection
-$conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
-
-// Check connection
-if ($conn === false) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$options = array(
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+);
 
 try {
+    // Use variables from config.php to create the connection
+    $dsn = "mysql:host=$host;dbname=$dbname";
+    $connection = new PDO($dsn, $username, $password, $options);
+    
+    // Execute SQL query to fetch data
     $sql = "SELECT * FROM employees";
-    $statement = $conn->prepare($sql);
+    $statement = $connection->prepare($sql);
     $statement->execute();
-    $result = $statement->fetchAll();
-} catch(PDOException $error) {
-    echo $sql . "<br>" . $error->getMessage();
+    $result = $statement->fetchAll(); // Fetch all rows
+    
+} catch (PDOException $error) {
+    echo "Connection failed: " . $error->getMessage();
 }
 ?>
+
+
 <h2>Employees</h2>
 <table>
     <thead>

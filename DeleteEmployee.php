@@ -1,23 +1,22 @@
 <?php
-// Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$database = "robsrecords";
+require_once 'config.php';
 
 // Create connection
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+    $options = array(
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    );
+    $dsn = "mysql:host=$host;dbname=$dbname";
+    $connection = new PDO($dsn, $username, $password, $options);
+} catch (PDOException $error) {
+    echo "Connection failed: " . $error->getMessage();
 }
 
 if (isset($_GET["id"])) {
     try {
         $id = $_GET["id"];
         $sql = "DELETE FROM employees WHERE employeeid = :id";
-        $statement = $conn->prepare($sql);
+        $statement = $connection->prepare($sql);
         $statement->bindValue(':id', $id);
         $statement->execute();
         $success = "Employee ". $id. " successfully deleted";
@@ -32,7 +31,7 @@ if (isset($_GET["id"])) {
 
 try {
     $sql = "SELECT * FROM employees";
-    $statement = $conn->prepare($sql);
+    $statement = $connection->prepare($sql);
     $statement->execute();
     $result = $statement->fetchAll();
 } catch(PDOException $error) {

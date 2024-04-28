@@ -1,13 +1,10 @@
 <?php
-// Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$database = "robsrecords";
+// Include config.php
+include 'config.php';
 
 // Create connection
 try {
-    $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+    $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();

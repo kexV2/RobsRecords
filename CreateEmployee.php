@@ -1,12 +1,10 @@
 <?php
-// Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$database = "robsrecords";
+require_once 'config.php';
 
 // Create connection
-$conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
+$conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+
+
 
 // Check connection
 if ($conn === false) {

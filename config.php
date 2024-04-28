@@ -1,8 +1,9 @@
 <?php
-$host = 'localhost'; // Your database host
-$dbname = 'RobsRecords'; // Your database name
-$username = 'root'; // Your database username
-$password = 'admin'; // Your database password
+$host = "localhost";
+$username = "root";
+$password = "admin";
+$dbname = "robsrecords";
+
 
 $options = array(
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION

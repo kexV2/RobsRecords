@@ -1,27 +1,22 @@
-
 <?php
-// Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$database = "robsrecords";
+// Include the configuration file
+include 'config.php';
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Create connection using PDO
+try {
+    $connection = new PDO($dsn, $username, $password, $options);
+} catch (PDOException $error) {
+    echo "Connection failed: " . $error->getMessage();
 }
 
 // SQL query to count the number of different artists in the "products" table, excluding null values
 $sql = "SELECT COUNT(DISTINCT artist) as total_artists FROM products WHERE artist IS NOT NULL";
-$result = $conn->query($sql);
+$result = $connection->query($sql);
 
 // Check if there are results
-if ($result->num_rows > 0) {
+if ($result->rowCount() > 0) {
     // Fetch associative array of results
-    $row = $result->fetch_assoc();
+    $row = $result->fetch(PDO::FETCH_ASSOC);
 
     // Get the total count of different artists from the result
     $totalArtists = $row['total_artists'];
@@ -32,40 +27,14 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-// Close connection
-$conn->close();
-
-// Now $totalArtists contains the count of different artists in the "products" table (excluding null values)
-// You can use $totalArtists variable wherever you need the count
-?>
-
-<?php
-// Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$database = "robsrecords";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 // SQL query to count the number of different genres in the "products" table
 $sql = "SELECT COUNT(DISTINCT genre) as total_genres FROM products WHERE genre IS NOT NULL";
-$result = $conn->query($sql);
+$result = $connection->query($sql);
 
 // Check if there are results
-if ($result->num_rows > 0) {
+if ($result->rowCount() > 0) {
     // Fetch associative array of results
-    $row = $result->fetch_assoc();
+    $row = $result->fetch(PDO::FETCH_ASSOC);
 
     // Get the total count of different genres from the result
     $totalGenres = $row['total_genres'];
@@ -76,43 +45,18 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
-// Close connection
-$conn->close();
-
-// Now $hours, $minutes, and $seconds contain the total duration in hours, minutes, and seconds respectively
-// $formattedDuration contains the total duration formatted as HH:MM:SS
-// You can use these variables wherever you need the total duration broken down or formatted
-?>
-
-
-
-<?php
-// Database connection parameters
-$servername = "localhost";
-$username = "root";
-$password = "admin";
-$database = "robsrecords";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 // SQL query for selecting data from the "products" table
 $sql = "SELECT * FROM products";
-$result = $conn->query($sql);
+$result = $connection->query($sql);
 
 // SQL query to count the number of rows in the "products" table
 $sql = "SELECT COUNT(*) as total FROM products";
-$result = $conn->query($sql);
+$result = $connection->query($sql);
 
 // Check if there are results
-if ($result->num_rows > 0) {
+if ($result->rowCount() > 0) {
     // Fetch associative array of results
-    $row = $result->fetch_assoc();
+    $row = $result->fetch(PDO::FETCH_ASSOC);
 
     // Get the total count from the result
     $totalProducts = $row['total'];
@@ -123,16 +67,17 @@ if ($result->num_rows > 0) {
     echo "0 results";
 }
 
+// Close connection
+$connection = null;
 
-$conn->close();
-
-// Now $totalProducts contains the count of rows in the "products" table
-// You can use $totalProducts variable wherever you need the count
+// Now $totalArtists, $totalGenres, and $totalProducts contain the required counts
+// You can use these variables wherever you need them
 ?>
 
 <?php
 session_start();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -404,53 +349,44 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
               <h3>All</h3>
             </div>
 
+            <?php
+require_once 'config.php';
 
-              <?php
+// PDO connection
+$pdo = new PDO($dsn, $username, $password);
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-              // PDO connection
-              $dsn = "mysql:host=localhost;dbname=robsrecords";
-              $username = "root";
-              $password = "admin";
+// SQL query
+$query = "SELECT name, artist, price, genre, imgur AS imgur FROM products";
 
-              try {
-                  $pdo = new PDO($dsn, $username, $password);
-                  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Prepare statement
+$statement = $pdo->prepare($query);
 
-                  // SQL query
-                  $query = "SELECT name, artist, price, genre, imgur AS imgur FROM products";
+// Execute statement
+$statement->execute();
 
-                  // Prepare statement
-                  $statement = $pdo->prepare($query);
+// Fetch data
+$products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-                  // Execute statement
-                  $statement->execute();
+// loop to get all the products from database and place them in the html code and output it
+echo '<div class="row gy-5">';
+foreach ($products as $product) {
+    echo '<div class="col-lg-4 menu-item">';
+    echo '<a href="' . $product['imgur'] . '" class="glightbox"><img src="' . $product['imgur'] . '" class="menu-img img-fluid" alt=""></a>';
+    echo '<h4>' . $product['name'] . '</h4>';
+    echo '<p class="ingredients">';
+    echo 'Artists: ' . $product['artist'] . '<br>';
+    echo 'Genre: ' . $product['genre'];
+    echo '</p>';
+    echo '<p class="price">$' . $product['price'] . '</p>';
+    echo '</div>';
+}
+echo '</div>';
 
-                  // Fetch data
-                  $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+// Close connection
+$pdo = null;
 
-                  // loop to get all the products from database and place them in the html code and output it
-                  echo '<div class="row gy-5">';
-                  foreach ($products as $product) {
-                      echo '<div class="col-lg-4 menu-item">';
-                      echo '<a href="' . $product['imgur'] . '" class="glightbox"><img src="' . $product['imgur'] . '" class="menu-img img-fluid" alt=""></a>';
-                      echo '<h4>' . $product['name'] . '</h4>';
-                      echo '<p class="ingredients">';
-                      echo 'Artists: ' . $product['artist'] . '<br>';
-                      echo 'Genre: ' . $product['genre'];
-                      echo '</p>';
-                      echo '<p class="price">$' . $product['price'] . '</p>';
-                      echo '</div>';
-                  }
-                  echo '</div>';
-              } catch (PDOException $e) {
-                  //to catch errors
-                  echo "Error: " . $e->getMessage();
-              }
-
-              // Close connection
-              $pdo = null;
-
-              ?>
+?>
 
 
 

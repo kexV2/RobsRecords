@@ -1,15 +1,12 @@
 <?php
+require_once 'config.php';
+
 class Product {
     private $conn;
 
-    public function __construct($servername, $username, $password, $database) {
+    public function __construct() {
         // Create connection
-        $servername = "localhost"; // Change this if your MySQL server is hosted elsewhere
-        $username = "root"; // Your MySQL username
-        $password = "admin"; // Your MySQL password
-        $dbname = "robsrecords"; // Your database name
-
-        $this->conn = new mysqli($servername, $username, $password, $database);
+        $this->conn = new mysqli($GLOBALS['servername'], $GLOBALS['username'], $GLOBALS['password'], $GLOBALS['dbname']);
 
         // Check connection
         if ($this->conn->connect_error) {
@@ -45,12 +42,7 @@ class Product {
 }
 
 // Usage:
-$servername = "localhost"; // Change this if your MySQL server is hosted elsewhere
-$username = "root"; // Your MySQL username
-$password = "sqlisgay1"; // Your MySQL password
-$dbname = "robsrecords"; // Your database name
-
-$productObj = new Product($servername, $username, $password, $database);
+$productObj = new Product();
 $products = $productObj->getProducts();
 
 // You can now use $products array which contains product data
