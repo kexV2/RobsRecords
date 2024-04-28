@@ -6,7 +6,7 @@ class Product {
         // Create connection
         $servername = "localhost"; // Change this if your MySQL server is hosted elsewhere
         $username = "root"; // Your MySQL username
-        $password = "sqlisgay1"; // Your MySQL password
+        $password = "admin"; // Your MySQL password
         $dbname = "robsrecords"; // Your database name
 
         $this->conn = new mysqli($servername, $username, $password, $database);

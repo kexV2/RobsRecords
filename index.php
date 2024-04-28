@@ -3,7 +3,7 @@
 // Database connection parameters
 $servername = "localhost";
 $username = "root";
-$password = "sqlisgay1";
+$password = "admin";
 $database = "robsrecords";
 
 // Create connection
@@ -43,7 +43,7 @@ $conn->close();
 // Database connection parameters
 $servername = "localhost";
 $username = "root";
-$password = "sqlisgay1";
+$password = "admin";
 $database = "robsrecords";
 
 // Create connection
@@ -90,7 +90,7 @@ $conn->close();
 // Database connection parameters
 $servername = "localhost";
 $username = "root";
-$password = "sqlisgay1";
+$password = "admin";
 $database = "robsrecords";
 
 // Create connection
@@ -130,7 +130,9 @@ $conn->close();
 // You can use $totalProducts variable wherever you need the count
 ?>
 
-
+<?php
+session_start();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -172,29 +174,33 @@ $conn->close();
   <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="container d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center me-auto me-lg-0">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
-        <h1>ROB's Records<span>.</span></h1>
-      </a>
+        <a href="index.php" class="logo d-flex align-items-center me-auto me-lg-0">
+            <!-- Uncomment the line below if you also wish to use an image logo -->
+            <!-- <img src="assets/img/logo.png" alt=""> -->
+            <h1>ROB'S Records<span>.</span></h1>
+        </a>
 
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a href="#hero">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#menu">Products</a></li>
-          <li><a href="#chefs">Owners</a></li>
-          <li><a href="#gallery">Gallery</a></li>
-          <li><a href="login.html">Login</a></li>
+        <nav id="navbar" class="navbar">
+    <ul>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#menu">Products</a></li>
+        <li><a href="#chefs">Owners</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <?php if (isset($_SESSION['loggedIn']) && $_SESSION['loggedIn'] && $_SESSION['user_role'] == 'admin'): ?>
+            <li class="nav-item">
+                <a class="nav-link" href="dashboard.html">Dashboard</a>
+            </li>
+        <?php endif; ?>
+        <li><a href="login.html">Login</a></li>
+    </ul>
+</nav><!-- .navbar -->
 
-      </nav><!-- .navbar -->
-
-      
-      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+        <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+        <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
 
     </div>
-  </header><!-- End Header -->
+</header><!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="hero d-flex align-items-center section-bg">
@@ -404,7 +410,7 @@ Choose Rob's Records for a curated selection of music fueled by passion and comm
               // PDO connection
               $dsn = "mysql:host=localhost;dbname=robsrecords";
               $username = "root";
-              $password = "sqlisgay1";
+              $password = "admin";
 
               try {
                   $pdo = new PDO($dsn, $username, $password);

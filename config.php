@@ -2,7 +2,7 @@
 $host = 'localhost'; // Your database host
 $dbname = 'RobsRecords'; // Your database name
 $username = 'root'; // Your database username
-$password = 'sqlisgay1'; // Your database password
+$password = 'admin'; // Your database password
 
 $options = array(
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION

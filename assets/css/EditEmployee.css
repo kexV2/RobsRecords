@@ -1,0 +1,45 @@
+/* Container styles */
+.container {
+    max-width: 800px;
+    margin: 50px auto; /* Center the container vertically */
+    padding: 20px;
+    background-color: #fff; /* Set background color for the container */
+    border-radius: 10px; /* Add rounded edges */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add shadow */
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e8e8e8;
+    margin: 0;
+    padding: 0;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Table header styles */
+th {
+    padding: 10px;
+    background-color: #f0f0f0;
+    text-align: left;
+}
+
+/* Table row styles */
+tr {
+    border-bottom: 1px solid #ddd;
+}
+
+/* Table cell styles */
+td {
+    padding: 10px;
+}
+
+/* Heading styles */
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
