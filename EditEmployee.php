@@ -51,4 +51,4 @@ try {
 <?php endforeach; ?>
     </tbody>
 </table>
-<a href="index.php">Back to home</a> 
+<a href="dashboard.html">Back to home</a> 

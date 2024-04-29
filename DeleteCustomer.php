@@ -15,14 +15,14 @@ try {
 if (isset($_GET["id"])) {
     try {
         $id = $_GET["id"];
-        $sql = "DELETE FROM employees WHERE employeeid = :id";
+        $sql = "DELETE FROM customers WHERE customerid = :id";
         $statement = $connection->prepare($sql);
         $statement->bindValue(':id', $id);
         $statement->execute();
-        $success = "Employee ". $id. " successfully deleted";
+        $success = "Customer ". $id. " successfully deleted";
 
         // Redirect back to DeleteEmployee.php after successful deletion
-        header("Location: DeleteEmployee.php?success=".urlencode($success));
+        header("Location: DeleteCustomer.php?success=".urlencode($success));
         exit();
     } catch(PDOException $error) {
         echo $sql . "<br>" . $error->getMessage();
@@ -30,7 +30,7 @@ if (isset($_GET["id"])) {
 }
 
 try {
-    $sql = "SELECT * FROM employees";
+    $sql = "SELECT * FROM customers";
     $statement = $connection->prepare($sql);
     $statement->execute();
     $result = $statement->fetchAll();
@@ -58,12 +58,14 @@ if (isset($_GET["success"])) {
     <tbody>
     <?php foreach ($result as $row) : ?>
         <tr>
-            <td><?php echo $row["employeeid"]; ?></td>
+            <td><?php echo $row["CustomerId"]; ?></td>
             <td><?php echo $row["firstname"]; ?></td>
             <td><?php echo $row["lastname"]; ?></td>
+            <td><?php echo $row["username"]; ?></td>
             <td><?php echo $row["email"]; ?></td>
-            <td><?php echo $row["employeeUsername"]; ?></td>
-            <td><a href="DeleteEmployee.php?id=<?php echo $row["employeeid"]; ?>">Delete</a></td>
+            <td><a href="DeleteCustomer.php?id=<?php echo $row["CustomerId"]; ?>">Delete</a></td>
+
+
 
         </tr>
     <?php endforeach; ?>
