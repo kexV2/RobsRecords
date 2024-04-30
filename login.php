@@ -1,4 +1,5 @@
 <?php
+session_start(); // Make sure session is started
 require_once 'config.php';
 
 // Check if the form has been submitted
@@ -15,7 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Check if a row was returned
     if ($statement->rowCount() > 0) {
-        // Login successful, redirect to dashboard
+        // Login successful, store user role in session and redirect to dashboard
+        $_SESSION['loggedIn'] = true;
+        $_SESSION['user_role'] = 'admin'; // Assuming all users in this table are admins
         header("Location: index.php");
         exit;
     } else {
@@ -26,7 +29,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 // Close connection
 $connection = null;
-
 ?>
-
-<!-- Your HTML form and error message display code here -->
